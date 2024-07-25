@@ -1,0 +1,30 @@
+AirBnb Clone Console
+
+Models to use
+cmd module
+json module
+datetime module
+
+Classes to use
+
+-> Models directory (Package, must contain __init__.py):(models) Contains all Modules
+
+-> BaseModel():(base_models.py) Parent class to contain all common attributes and methods
+	- This is created in models directory
+	- attributes: (id, created_at, updated_at)
+	- methods: (save(), to_json())
+		-save():  # Calls file storage class to handle saving of object.
+				  # Since FileStorage clas might have unique attribute for storing file, basemodel must import filestorage class and use that instance of the class to save the file using this method.
+
+-> Child classes: will inherit from the BaseModel() class using super init magic method function.
+	- inherit all parent attributes and methods
+	- They will also initialize unique attributes
+
+-> tests:(models/tests) Directory contains all tests files
+
+-> console:(console.py) Entry point of command intepretor
+
+-> engine: (models/engine) Directory contains all storage classes (file_storage.py) (Serialization and deserialization)
+	- Attributes related to the file
+	- Methods related to the file
+
