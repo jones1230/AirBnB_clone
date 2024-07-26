@@ -18,14 +18,14 @@ class BaseModel():
                     self.__dict__[key] = kwargs[key]
         else:
             self.id = str(uuid4())
-            self.created_at = datetime.now()
+            self.created_at = datetime.utcnow()
             self.updated_at = self.created_at
 
     def __str__(self):
         return f'[{self.__class__.__name__}]({self.id}){self.__dict__}'
 
     def save(self):
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.utcnow()
 
         def to_dict(self):
             new_dict = self.__dict__.copy()
