@@ -20,5 +20,6 @@ class BaseModel():
         self.__dict__.update(__class__=__class__.__name__)
         self.__dict__.update(updated_at=self.updated_at.isoformat())
         self.__dict__.update(created_at=self.created_at.isoformat())
-        sorted_items = sorted(self.__dict__.items())
-        return dict(sorted_items)
+        return self.__dict__
+        # sorted_items = sorted(self.__dict__.items())
+        # return dict(sorted_items)
