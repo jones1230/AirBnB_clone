@@ -27,8 +27,8 @@ class BaseModel():
     def to_dict(self):
         self.__dict__.update(
             {'__class__': __class__.__name__,
-            'updated_at': datetime.isoformat(self.updated_at),
-            'created_at': datetime.isoformat(self.created_at)
+            'updated_at': self.updated_at.isoformat(),
+            'created_at': self.created_at.isoformat()
             })
         return self.__dict__
         # sorted_items = sorted(self.__dict__.items())
