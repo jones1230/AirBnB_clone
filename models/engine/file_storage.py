@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 import json
+import os
+import datetime
 
 
 class FileStorage():
@@ -20,11 +22,10 @@ class FileStorage():
             json.dump(obj_dict, json_file)
 
     def reload(self):
-        try:
-            with open(self.__file_path, 'r') as fhand:
-                json_dict = json.loads(fhand.read())
-                for value in json_dict.values():
-                    cls = value["__class__"]
-                    self.new(eval(cls)(**value))
-        except Exception:
-            pass
+        if not os.path.isfile(FileStorage.__file_path):
+            return
+        with open(FileStorage.__file_path, "r", encoding="utf-8") as fhand:
+            obj_dict = json.load(fhand)
+            obj_dict = {k: self.classes()[v["__class__"]](**v)
+                        for k, v in obj_dict.items()}
+            FileStorage.__objects = obj_dict
