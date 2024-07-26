@@ -5,10 +5,18 @@ from datetime import datetime, timezone
 
 
 class BaseModel():
-    def __init__(self) -> None:
-        self.id = str(uuid4())
-        self.created_at = datetime.utcnow()
-        self.updated_at = self.created_at
+    def __init__(self, *args, **kwargs):
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == '__class__':
+                    continue
+                if key in ('created_at', 'updated_at'):
+                    value = datetime.fromisoformat(value)
+                setattr(self, key, value)
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.utcnow()
+            self.updated_at = self.created_at
 
     def __str__(self):
         return f'[{self.__class__.__name__}]({self.id}){BaseModel().__dict__}'
