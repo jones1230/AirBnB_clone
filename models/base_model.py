@@ -22,9 +22,3 @@ class BaseModel():
         self.__dict__.update(created_at=self.created_at.isoformat())
         sorted_items = sorted(self.__dict__.items())
         return dict(sorted_items)
-
-
-v = BaseModel()
-v.name = 'Jesse'
-v.age = 22
-print(v.to_dict())
