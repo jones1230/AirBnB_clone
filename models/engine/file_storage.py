@@ -21,7 +21,7 @@ class FileStorage():
 
     def reload(self):
         try:
-           with open(self.__file_path, 'r') as fhand:
+            with open(self.__file_path, 'r') as fhand:
                 json_dict = json.loads(fhand.read())
                 for value in json_dict.values():
                     cls = value["__class__"]
