@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 from uuid import uuid4
 from datetime import datetime, timezone
@@ -24,7 +24,7 @@ class BaseModel():
         return dict(sorted_items)
 
 
-""" v = BaseModel()
+v = BaseModel()
 v.name = 'Jesse'
 v.age = 22
-print(v.to_dict()) """
+print(v.to_dict())
