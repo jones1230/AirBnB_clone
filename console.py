@@ -32,9 +32,12 @@ class HBNBCommand(cmd.Cmd):
 
     def do_quit(self, line):
         """ Exit the CLI on quit command. """
-        return self.do_EOF(line)
+        return True
 
 
 if __name__ == '__main__':
     """ Start the CLI. """
-    HBNBCommand().cmdloop()
+    try:
+        HBNBCommand().cmdloop()
+    except KeyboardInterrupt:
+        print('Session Ended!')
