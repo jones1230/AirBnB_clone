@@ -25,12 +25,12 @@ class HBNBCommand(cmd.Cmd):
     """
 
     prompt = "(hbnb) "
-
-    def do_EOF(self, line):
+    @staticmethod
+    def do_EOF(line):
         """ Exit the CLI on EOF command. """
         return True
-
-    def do_quit(self, line):
+    @staticmethod
+    def do_quit(line):
         """ Exit the CLI on quit command. """
         return True
 
