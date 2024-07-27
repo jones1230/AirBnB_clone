@@ -24,7 +24,7 @@ class HBNBCommand(cmd.Cmd):
         prompt (str): CLI prompt displayed to the user.
     """
 
-    prompt = "(hbnb)"
+    prompt = "(hbnb) "
 
     def do_EOF(self, line):
         """ Exit the CLI on EOF command. """
