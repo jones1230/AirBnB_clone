@@ -33,6 +33,9 @@ class HBNBCommand(cmd.Cmd):
     def do_quit(line):
         """ Exit the CLI on quit command. """
         return True
+    
+    def emptyline(line):
+        return False
 
 
 if __name__ == '__main__':
