@@ -8,6 +8,7 @@ from models import storage
 from models.base_model import BaseModel
 from models.user import User
 
+
 class TestConsole(unittest.TestCase):
     """Unittests for the HBNBCommand console."""
 
@@ -116,7 +117,8 @@ class TestConsole(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as f:
             self.cli.onecmd(f"update BaseModel {instance.id} name 'test'")
             self.assertEqual(f.getvalue().strip(), "")
-            self.assertEqual(storage.all()[f"BaseModel.{instance.id}"].name, 'test')
+            self.assertEqual(storage.all()[f"BaseModel.{instance.id}"].name,
+                             'test')
 
         with patch('sys.stdout', new=StringIO()) as f:
             self.cli.onecmd("update BaseModel")
@@ -132,7 +134,8 @@ class TestConsole(unittest.TestCase):
 
         with patch('sys.stdout', new=StringIO()) as f:
             self.cli.onecmd(f"update BaseModel {instance.id}")
-            self.assertEqual(f.getvalue().strip(), "** attribute name missing **")
+            self.assertEqual(f.getvalue().strip(),
+                             "** attribute name missing **")
 
         with patch('sys.stdout', new=StringIO()) as f:
             self.cli.onecmd(f"update BaseModel {instance.id} name")
@@ -164,14 +167,17 @@ class TestConsole(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as f:
             self.cli.onecmd(f'BaseModel.update({instance.id}, "name", "test")')
             self.assertEqual(f.getvalue().strip(), "")
-            self.assertEqual(storage.all()[f"BaseModel.{instance.id}"].name, 'test')
+            self.assertEqual(storage.all()[f"BaseModel.{instance.id}"].name,
+                             'test')
 
         instance = BaseModel()
         instance.save()
         with patch('sys.stdout', new=StringIO()) as f:
-            self.cli.onecmd(f'BaseModel.update({instance.id}, {{"name": "test"}})')
+            self.cli.onecmd(
+                f'BaseModel.update({instance.id}, {{"name": "test"}})')
             self.assertEqual(f.getvalue().strip(), "")
-            self.assertEqual(storage.all()[f"BaseModel.{instance.id}"].name, 'test')
+            self.assertEqual(storage.all()[f"BaseModel.{instance.id}"].name,
+                             'test')
 
 
 if __name__ == "__main__":
