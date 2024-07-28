@@ -37,10 +37,12 @@ class TestFileStorage(unittest.TestCase):
         """Test the new method"""
         self.storage.new(self.model)
         self.assertIn('BaseModel.1234', self.storage._FileStorage__objects)
-        self.assertEqual(self.storage._FileStorage__objects['BaseModel.1234'], self.model)
+        self.assertEqual(self.storage._FileStorage__objects['BaseModel.1234'],
+                         self.model)
 
     @patch("builtins.open", new_callable=mock_open)
-    @patch("models.engine.file_storage.FileStorage._FileStorage__file_path", "test.json")
+    @patch("models.engine.file_storage.FileStorage._FileStorage__file_path",
+           "test.json")
     def test_save(self, mock_file):
         """Test the save method"""
         self.storage.new(self.model)
@@ -50,9 +52,13 @@ class TestFileStorage(unittest.TestCase):
         handle.write.assert_called_once()
         handle.write(json.dumps({'BaseModel.1234': self.model_dict}))
 
-    @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({'BaseModel.1234': {
-        '__class__': 'BaseModel', 'id': '1234', 'created_at': '2022-01-01T12:00:00.000000', 'updated_at': '2022-01-01T12:00:00.000000'}}))
-    @patch("models.engine.file_storage.FileStorage._FileStorage__file_path", "test.json")
+    @patch("builtins.open", new_callable=mock_open,
+           read_data=json.dumps({'BaseModel.1234': {
+            '__class__': 'BaseModel', 'id': '1234',
+            'created_at': '2022-01-01T12:00:00.000000',
+            'updated_at': '2022-01-01T12:00:00.000000'}}))
+    @patch("models.engine.file_storage.FileStorage._FileStorage__file_path",
+           "test.json")
     def test_reload(self, mock_file):
         """Test the reload method"""
         self.storage.new(self.model)
@@ -60,7 +66,8 @@ class TestFileStorage(unittest.TestCase):
         self.storage._FileStorage__objects = {}
         self.storage.reload()
         self.assertIn('BaseModel.1234', self.storage._FileStorage__objects)
-        self.assertEqual(self.storage._FileStorage__objects['BaseModel.1234'].id, '1234')
+        self.assertEqual(
+            self.storage._FileStorage__objects['BaseModel.1234'].id, '1234')
 
     def test_classes(self):
         """Test the classes method"""
@@ -89,4 +96,3 @@ class TestFileStorage(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
