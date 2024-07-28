@@ -147,6 +147,7 @@ class HBNBCommand(cmd.Cmd):
         instance.save()
 
     def default(self, line):
+        """Handle default case where command is not recognized."""
         command = line.split('.')
         if len(command) == 2:
             if len(command) == 2 and command[1] == "all()":
@@ -170,6 +171,19 @@ class HBNBCommand(cmd.Cmd):
                     key = "{}.{}".format(class_name, instance_id)
                     if key in storage.all():
                         print(storage.all()[key])
+                    else:
+                        print("** no instance found **")
+                else:
+                    print("** class doesn't exist **")
+            elif command[1].startswith("destroy("
+                                       )and command[1].endswith(")"):
+                class_name = command[0]
+                if class_name in storage.classes():
+                    instance_id = command[1][8:-1]
+                    key = "{}.{}".format(class_name, instance_id)
+                    if key in storage.all():
+                        del storage.all()[key]
+                        storage.save()
                     else:
                         print("** no instance found **")
                 else:
