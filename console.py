@@ -69,7 +69,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, line):
         if line == "" or line is None:
-            print("** class name missing")
+            print("** class name missing **")
         else:
             words = line.split()
             if words[0] not in storage.classes():
