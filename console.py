@@ -148,21 +148,37 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line):
         command = line.split('.')
-        if len(command) == 2 and command[1] == "all()":
-            if command[0] in storage.classes() and command[1] == "all()":
-                self.do_all(command[0])
-            else:
-                print("** class doesn't exist **")
-        elif command[1] == "count()":
-            if command[0] in storage.classes():
-                instances = storage.all()
+        if len(command) == 2:
+            if len(command) == 2 and command[1] == "all()":
+                if command[0] in storage.classes() and command[1] == "all()":
+                    self.do_all(command[0])
+                else:
+                    print("** class doesn't exist **")
+            elif command[1] == "count()":
+                if command[0] in storage.classes():
+                    instances = storage.all()
+                    class_name = command[0]
+                    counts = sum(1 for key in instances if
+                                 key.startswith(class_name + '.'))
+                    print(counts)
+                else:
+                    print("** class doesn't exist **")
+            elif command[1].startswith("show(") and command[1].endswith(")"):
                 class_name = command[0]
-                counts = sum(1 for key in instances if key.startswith(class_name + '.'))
-                print(counts)
+                if class_name in storage.classes():
+                    instance_id = command[1][5:-1]
+                    key = "{}.{}".format(class_name, instance_id)
+                    if key in storage.all():
+                        print(storage.all()[key])
+                    else:
+                        print("** no instance found **")
+                else:
+                    print("** class doesn't exist **")
             else:
-                print("** class doesn't exist **")
+                print("** invalid command **")
         else:
             print("** invalid command **")
+
 
 if __name__ == '__main__':
     """Start the CLI."""
