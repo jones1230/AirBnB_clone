@@ -4,6 +4,7 @@ import unittest
 from models.user import User
 from datetime import datetime
 
+
 class TestUser(unittest.TestCase):
     """Test the User class"""
 
@@ -72,5 +73,7 @@ class TestUser(unittest.TestCase):
         self.assertIn("password", user_str)
         self.assertIn("first_name", user_str)
         self.assertIn("last_name", user_str)
+
+
 if __name__ == "__main__":
     unittest.main()
