@@ -189,6 +189,7 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     print("** class doesn't exist **")
             elif command[1].startswith("update(") and command[1].endswith(")"):
+                class_name = command[0]
                 if class_name in storage.classes():
                     params = command[1][7:-1].split(', ')
                     if len(params) == 3:
