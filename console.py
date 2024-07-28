@@ -27,18 +27,17 @@ class HBNBCommand(cmd.Cmd):
     """
     prompt = "(hbnb) "
 
-    @staticmethod
-    def do_EOF(line):
+    def do_EOF(self, line):
         """ Exit the CLI on EOF command. """
+        print()
         return True
 
-    @staticmethod
-    def do_quit(line):
+    def do_quit(self, line):
         """ Exit the CLI on quit command. """
         return True
 
-    def emptyline(line):
-        return False
+    def emptyline(self):
+        pass
 
     def do_create(self, line):
         valid_classes = storage.classes()
