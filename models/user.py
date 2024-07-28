@@ -17,7 +17,7 @@ class User(BaseModel):
         first_name (str): First name of the user. Default is an empty string.
         last_name (str): Last name of the user. Default is an empty string.
     """
-    email = ""
-    password = ""
-    first_name = ""
-    last_name = ""
+    email: str = ""
+    password: str = ""
+    first_name: str = ""
+    last_name: str = ""

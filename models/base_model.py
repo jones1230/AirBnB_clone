@@ -10,7 +10,8 @@ saving, and converting instances to a dictionary format.
 Imports:
     - uuid: For generating unique identifiers.
     - datetime: For handling date and time information.
-    - storage: For interacting with the storage system (e.g., saving and retrieving instances).
+    - storage: For interacting with the storage system
+    (e.g., saving and retrieving instances).
 """
 
 import uuid
