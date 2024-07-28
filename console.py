@@ -176,7 +176,7 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     print("** class doesn't exist **")
             elif command[1].startswith("destroy("
-                                       )and command[1].endswith(")"):
+                                       ) and command[1].endswith(")"):
                 class_name = command[0]
                 if class_name in storage.classes():
                     instance_id = command[1][8:-1]
@@ -186,6 +186,30 @@ class HBNBCommand(cmd.Cmd):
                         storage.save()
                     else:
                         print("** no instance found **")
+                else:
+                    print("** class doesn't exist **")
+            elif command[1].startswith("update(") and command[1].endswith(")"):
+                if class_name in storage.classes():
+                    params = command[1][7:-1].split(', ')
+                    if len(params) == 3:
+                        instance_id, attr_name, attr_value = params
+                        instance_id = instance_id.strip('"')
+                        attr_name = attr_name.strip('"')
+                        attr_value = attr_value.strip('"')
+                        key = "{}.{}".format(class_name, instance_id)
+                        if key in storage.all():
+                            instance = storage.all()[key]
+                            try:
+                                attr_type = type(getattr(instance, attr_name))
+                                attr_value = attr_type(attr_value)
+                            except AttributeError:
+                                pass
+                            setattr(instance, attr_name, attr_value)
+                            instance.save()
+                        else:
+                            print("** no instance found **")
+                    else:
+                        print("** invalid command **")
                 else:
                     print("** class doesn't exist **")
             else:
