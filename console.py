@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 """
 This module defines a simple command-line interface (CLI) for the AirBnB
 Clone Console project.
@@ -28,129 +27,118 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
 
     def do_EOF(self, line):
-        """ Exit the CLI on EOF command. """
+        """Exit the CLI on EOF command."""
         print()
         return True
 
     def do_quit(self, line):
-        """ Exit the CLI on quit command. """
+        """Exit the CLI on quit command."""
         return True
 
     def emptyline(self):
+        """Do nothing on empty input line."""
         pass
 
     def do_create(self, line):
-        valid_classes = storage.classes()
-        if line in valid_classes:
-            temp = valid_classes[line]()
-            temp.save()
-            print(temp.id)
-        elif line == "":
-            print("** class name missing **")
-        else:
-            print("** class doesn't exist **")
-
-    def do_show(self, line):
-        if line == "" or line is None:
-            print("** class name missing")
-        else:
-            words = line.split()
-            if words[0] not in storage.classes():
-                print("** class doesn't exist **")
-            elif len(words) < 2:
-                print("** instance id missing **")
-            else:
-                key = "{}.{}".format(words[0], words[1])
-                if key not in storage.all():
-                    print("** no instance found **")
-                else:
-                    print(storage.all()[key])
-
-    def do_destroy(self, line):
-        if line == "" or line is None:
-            print("** class name missing **")
-        else:
-            words = line.split()
-            if words[0] not in storage.classes():
-                print("** class doesn't exist **")
-            elif len(words) < 2:
-                print("** instance id missing **")
-            else:
-                key = "{}.{}".format(words[0], words[1])
-                if key not in storage.all():
-                    print("** no instance found **")
-                else:
-                    del storage.all()[key]
-                    storage.save()
-
-    def do_all(self, line):
-        if line != "":
-            words = line.split(' ')
-            if words[0] not in storage.classes():
-                print("** class doesn't exist **")
-            else:
-                nl = [str(obj) for key, obj in storage.all().items()
-                      if type(obj).__name__ == words[0]]
-                print(nl)
-        else:
-            new_list = [str(obj) for key, obj in storage.all().items()]
-            print(new_list)
-
-    def do_update(self, line):
+        """Create a new instance of BaseModel and print its id."""
         if not line:
             print("** class name missing **")
             return
+        try:
+            new_instance = eval(line)()
+            new_instance.save()
+            print(new_instance.id)
+        except NameError:
+            print("** class doesn't exist **")
 
+    def do_show(self, line):
+        """Show the string representation of an instance."""
         args = line.split()
-        if len(args) < 1:
+        if not args:
             print("** class name missing **")
             return
-
-        classname = args[0]
-        if classname not in storage.classes():
+        if args[0] not in storage.classes():
             print("** class doesn't exist **")
             return
-
         if len(args) < 2:
             print("** instance id missing **")
             return
-
-        uid = args[1]
-        key = "{}.{}".format(classname, uid)
+        key = "{}.{}".format(args[0], args[1])
         if key not in storage.all():
             print("** no instance found **")
             return
+        print(storage.all()[key])
 
+    def do_destroy(self, line):
+        """Delete an instance based on class name and id."""
+        args = line.split()
+        if not args:
+            print("** class name missing **")
+            return
+        if args[0] not in storage.classes():
+            print("** class doesn't exist **")
+            return
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+        key = "{}.{}".format(args[0], args[1])
+        if key not in storage.all():
+            print("** no instance found **")
+            return
+        del storage.all()[key]
+        storage.save()
+
+    def do_all(self, line):
+        """Print all string representations of all instances."""
+        args = line.split()
+        if args and args[0] not in storage.classes():
+            print("** class doesn't exist **")
+            return
+        objects = storage.all()
+        obj_list = []
+        if args:
+            for key, obj in objects.items():
+                if key.startswith(args[0] + '.'):
+                    obj_list.append(str(obj))
+        else:
+            for obj in objects.values():
+                obj_list.append(str(obj))
+        print(obj_list)
+
+    def do_update(self, line):
+        """Update an instance based on class name and id."""
+        args = line.split()
+        if not args:
+            print("** class name missing **")
+            return
+        if args[0] not in storage.classes():
+            print("** class doesn't exist **")
+            return
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+        key = "{}.{}".format(args[0], args[1])
+        if key not in storage.all():
+            print("** no instance found **")
+            return
         if len(args) < 3:
             print("** attribute name missing **")
             return
-
-        attribute = args[2]
         if len(args) < 4:
             print("** value missing **")
             return
-
-        value = " ".join(args[3:])
-        if value.startswith('"') and value.endswith('"'):
-            value = value[1:-1]
-        else:
-            try:
-                value = float(value) if '.' in value else int(value)
-            except ValueError:
-                pass
-
         instance = storage.all()[key]
-        if hasattr(instance, attribute):
-            attr_type = type(getattr(instance, attribute))
-            value = attr_type(value)
-
-        setattr(instance, attribute, value)
+        attr_name = args[2]
+        attr_value = args[3]
+        try:
+            attr_type = type(getattr(instance, attr_name))
+            attr_value = attr_type(attr_value)
+        except AttributeError:
+            pass
+        setattr(instance, attr_name, attr_value)
         instance.save()
 
 
 if __name__ == '__main__':
-    """ Start the CLI. """
-    try:
-        HBNBCommand().cmdloop()
-    except KeyboardInterrupt:
-        print('Session Ended!')
+    """Start the CLI."""
+    HBNBCommand().cmdloop()
