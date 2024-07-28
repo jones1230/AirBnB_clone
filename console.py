@@ -1,22 +1,6 @@
-#!/usr/bin/python3
-"""
-This module defines a simple command-line interface (CLI) for the AirBnB
-Clone Console project.
-
-The `HBNBCommand` class is a subclass of `cmd.Cmd` that provides a basic
-interactive prompt for user input. It supports basic commands such as
-`EOF` (End Of File) and `quit` to exit the CLI.
-
-Imports:
-    - cmd: The standard library module for creating command-line
-        interfaces.
-"""
-
 import cmd
 from models.base_model import BaseModel
 from models import storage
-from models.user import User
-from models.base_model import BaseModel
 from models.user import User
 from models.state import State
 from models.city import City
@@ -135,14 +119,19 @@ class HBNBCommand(cmd.Cmd):
         if len(args) < 4:
             print("** value missing **")
             return
+
         instance = storage.all()[key]
         attr_name = args[2]
         attr_value = args[3]
-        try:
+
+        # Convert the attribute value to the correct type if possible
+        if hasattr(instance, attr_name):
             attr_type = type(getattr(instance, attr_name))
-            attr_value = attr_type(attr_value)
-        except AttributeError:
-            pass
+            try:
+                attr_value = attr_type(attr_value)
+            except ValueError:
+                pass  # Keep it as a string if conversion fails
+
         setattr(instance, attr_name, attr_value)
         instance.save()
 
@@ -150,96 +139,112 @@ class HBNBCommand(cmd.Cmd):
         """Handle default case where command is not recognized."""
         command = line.split('.')
         if len(command) == 2:
-            if len(command) == 2 and command[1] == "all()":
-                if command[0] in storage.classes() and command[1] == "all()":
-                    self.do_all(command[0])
-                else:
-                    print("** class doesn't exist **")
+            if command[1] == "all()":
+                self.handle_all(command[0])
             elif command[1] == "count()":
-                if command[0] in storage.classes():
-                    instances = storage.all()
-                    class_name = command[0]
-                    counts = sum(1 for key in instances if
-                                 key.startswith(class_name + '.'))
-                    print(counts)
-                else:
-                    print("** class doesn't exist **")
+                self.handle_count(command[0])
             elif command[1].startswith("show(") and command[1].endswith(")"):
-                class_name = command[0]
-                if class_name in storage.classes():
-                    instance_id = command[1][5:-1]
-                    key = "{}.{}".format(class_name, instance_id)
-                    if key in storage.all():
-                        print(storage.all()[key])
-                    else:
-                        print("** no instance found **")
-                else:
-                    print("** class doesn't exist **")
+                self.handle_show(command[0], command[1][5:-1])
             elif command[1].startswith("destroy("
                                        ) and command[1].endswith(")"):
-                class_name = command[0]
-                if class_name in storage.classes():
-                    instance_id = command[1][8:-1]
-                    key = "{}.{}".format(class_name, instance_id)
-                    if key in storage.all():
-                        del storage.all()[key]
-                        storage.save()
-                    else:
-                        print("** no instance found **")
-                else:
-                    print("** class doesn't exist **")
+                self.handle_destroy(command[0], command[1][8:-1])
             elif command[1].startswith("update(") and command[1].endswith(")"):
-                class_name = command[0]
-                if class_name in storage.classes():
-                    params = command[1][7:-1]
-                    if params.startswith('{') and params.endswith('}'):
-                        # Handle dictionary update
-                        instance_id, attr_dict = params.split(', ', 1)
-                        instance_id = instance_id.strip('"')
-                        attr_dict = eval(attr_dict)
-                        key = "{}.{}".format(class_name, instance_id)
-                        if key in storage.all():
-                            instance = storage.all()[key]
-                            for attr_name, attr_value in attr_dict.items():
-                                try:
-                                    attr_type = type(getattr(instance,
-                                                             attr_name))
-                                    attr_value = attr_type(attr_value)
-                                except AttributeError:
-                                    pass
-                                setattr(instance, attr_name, attr_value)
-                            instance.save()
-                        else:
-                            print("** no instance found **")
-                    else:
-                        # Handle single attribute update
-                        params = params.split(', ')
-                        if len(params) == 3:
-                            instance_id, attr_name, attr_value = params
-                            instance_id = instance_id.strip('"')
-                            attr_name = attr_name.strip('"')
-                            attr_value = attr_value.strip('"')
-                            key = "{}.{}".format(class_name, instance_id)
-                            if key in storage.all():
-                                instance = storage.all()[key]
-                                try:
-                                    attr_type = type(getattr(instance,
-                                                             attr_name))
-                                    attr_value = attr_type(attr_value)
-                                except AttributeError:
-                                    pass
-                                setattr(instance, attr_name, attr_value)
-                                instance.save()
-                            else:
-                                print("** no instance found **")
-                        else:
-                            print("** invalid command **")
-                else:
-                    print("** class doesn't exist **")
+                self.handle_update(command[0], command[1][7:-1])
             else:
                 print("** invalid command **")
         else:
             print("** invalid command **")
+
+    def handle_all(self, class_name):
+        """Handle all() command for a class."""
+        if class_name in storage.classes():
+            self.do_all(class_name)
+        else:
+            print("** class doesn't exist **")
+
+    def handle_count(self, class_name):
+        """Handle count() command for a class."""
+        if class_name in storage.classes():
+            instances = storage.all()
+            counts = sum(1 for key in instances
+                         if key.startswith(class_name + '.'))
+            print(counts)
+        else:
+            print("** class doesn't exist **")
+
+    def handle_show(self, class_name, instance_id):
+        """Handle show() command for a class and instance id."""
+        if class_name in storage.classes():
+            key = "{}.{}".format(class_name, instance_id)
+            if key in storage.all():
+                print(storage.all()[key])
+            else:
+                print("** no instance found **")
+        else:
+            print("** class doesn't exist **")
+
+    def handle_destroy(self, class_name, instance_id):
+        """Handle destroy() command for a class and instance id."""
+        if class_name in storage.classes():
+            key = "{}.{}".format(class_name, instance_id)
+            if key in storage.all():
+                del storage.all()[key]
+                storage.save()
+            else:
+                print("** no instance found **")
+        else:
+            print("** class doesn't exist **")
+
+    def handle_update(self, class_name, params):
+        """Handle update() command for a class and parameters."""
+        if class_name in storage.classes():
+            if params.startswith('{') and params.endswith('}'):
+                self.handle_dict_update(class_name, params)
+            else:
+                self.handle_single_update(class_name, params.split(', '))
+        else:
+            print("** class doesn't exist **")
+
+    def handle_dict_update(self, class_name, params):
+        """Handle dictionary update for a class."""
+        instance_id, attr_dict = params.split(', ', 1)
+        instance_id = instance_id.strip('"')
+        attr_dict = eval(attr_dict)
+        key = "{}.{}".format(class_name, instance_id)
+        if key in storage.all():
+            instance = storage.all()[key]
+            for attr_name, attr_value in attr_dict.items():
+                self.update_attribute(instance, attr_name, attr_value)
+            instance.save()
+        else:
+            print("** no instance found **")
+
+    def handle_single_update(self, class_name, params):
+        """Handle single attribute update for a class."""
+        if len(params) == 3:
+            instance_id, attr_name, attr_value = params
+            instance_id = instance_id.strip('"')
+            attr_name = attr_name.strip('"')
+            attr_value = attr_value.strip('"')
+            key = "{}.{}".format(class_name, instance_id)
+            if key in storage.all():
+                instance = storage.all()[key]
+                self.update_attribute(instance, attr_name, attr_value)
+                instance.save()
+            else:
+                print("** no instance found **")
+        else:
+            print("** invalid command **")
+
+    def update_attribute(self, instance, attr_name, attr_value):
+        """Update the attribute of an instance."""
+        if hasattr(instance, attr_name):
+            attr_type = type(getattr(instance, attr_name))
+            try:
+                attr_value = attr_type(attr_value)
+            except ValueError:
+                pass  # Keep it as a string if conversion fails
+        setattr(instance, attr_name, attr_value)
 
 
 if __name__ == '__main__':
