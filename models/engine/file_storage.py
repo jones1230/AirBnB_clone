@@ -15,7 +15,6 @@ Imports:
 
 import json
 import os
-import datetime
 
 
 class FileStorage:
@@ -73,9 +72,11 @@ class FileStorage:
             values are the class objects.
         """
         from models.base_model import BaseModel
+        from models.user import User
 
         classes = {
-            "BaseModel": BaseModel
+            "BaseModel": BaseModel,
+            "User": User,
         }
         return classes
 
