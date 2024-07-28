@@ -153,9 +153,16 @@ class HBNBCommand(cmd.Cmd):
                 self.do_all(command[0])
             else:
                 print("** class doesn't exist **")
+        elif command[1] == "count()":
+            if command[0] in storage.classes():
+                instances = storage.all()
+                class_name = command[0]
+                counts = sum(1 for key in instances if key.startswith(class_name + '.'))
+                print(counts)
+            else:
+                print("** class doesn't exist **")
         else:
             print("** invalid command **")
-
 
 if __name__ == '__main__':
     """Start the CLI."""
