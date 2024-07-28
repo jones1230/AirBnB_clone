@@ -4,12 +4,14 @@ from datetime import datetime
 from models.base_model import BaseModel
 from models import storage
 
+
 class TestBaseModel(unittest.TestCase):
     """Test cases for the BaseModel class."""
 
     def setUp(self):
         """Set up test environment."""
-        # Assuming storage.new(self) is not actually needed for testing and is a placeholder
+        # Assuming storage.new(self) is
+        # not actually needed for testing and is a placeholder
         pass
 
     def tearDown(self):
@@ -55,8 +57,11 @@ class TestBaseModel(unittest.TestCase):
         self.assertIsInstance(model_dict, dict)
         self.assertIn('__class__', model_dict)
         self.assertEqual(model_dict['__class__'], 'BaseModel')
-        self.assertEqual(model_dict['created_at'], model.created_at.isoformat())
-        self.assertEqual(model_dict['updated_at'], model.updated_at.isoformat())
+        self.assertEqual(model_dict['created_at'],
+                         model.created_at.isoformat())
+        self.assertEqual(model_dict['updated_at'],
+                         model.updated_at.isoformat())
+
 
 if __name__ == '__main__':
     unittest.main()
