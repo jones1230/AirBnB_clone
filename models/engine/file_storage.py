@@ -63,7 +63,7 @@ class FileStorage:
             obj_dict[obj_key] = obj_value.to_dict()
         with open(self.__file_path, 'w', encoding="utf-8") as json_file:
             json.dump(obj_dict, json_file)
-    
+
     def attributes(self):
         """Returns the valid attributes and their types for classname"""
         attributes = {
