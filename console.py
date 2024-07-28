@@ -146,6 +146,16 @@ class HBNBCommand(cmd.Cmd):
         setattr(instance, attr_name, attr_value)
         instance.save()
 
+    def default(self, line):
+        command = line.split('.')
+        if len(command) == 2 and command[1] == "all()":
+            if command[0] in storage.classes() and command[1] == "all()":
+                self.do_all(command[0])
+            else:
+                print("** class doesn't exist **")
+        else:
+            print("** invalid command **")
+
 
 if __name__ == '__main__':
     """Start the CLI."""
