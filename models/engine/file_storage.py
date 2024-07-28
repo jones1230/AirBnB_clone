@@ -89,6 +89,8 @@ class FileStorage:
         """
         if not os.path.isfile(FileStorage.__file_path):
             return
+        if os.path.getsize(self.__file_path) == 0:
+            return
         with open(FileStorage.__file_path, "r", encoding="utf-8") as fhand:
             obj_dict = json.load(fhand)
             obj_dict = {k: self.classes()[v["__class__"]](**v)

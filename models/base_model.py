@@ -79,7 +79,7 @@ class BaseModel:
         This method is used to persist changes made to the instance.
         """
         self.updated_at = datetime.now()
-        storage.save(self)
+        storage.save()
 
     def to_dict(self):
         """

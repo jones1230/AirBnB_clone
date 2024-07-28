@@ -1,24 +1,15 @@
 {
-    "BaseModel.090040d9-9e94-420f-80df-32bc06cb5ac7": {
-        "id": "090040d9-9e94-420f-80df-32bc06cb5ac7",
-        "created_at": "2024-07-27T02:42:20.936751",
-        "updated_at": "2024-07-27T02:44:21.025941",
+    "BaseModel.759995a9-408a-4740-8ff3-536f0fe30fd2": {
+        "id": "759995a9-408a-4740-8ff3-536f0fe30fd2",
+        "created_at": "2024-07-27T21:53:50.923145",
+        "updated_at": "2024-07-27T21:53:50.923175",
         "__class__": "BaseModel"
     },
-    "BaseModel.dff1f52c-5e5d-4d1d-858d-dd988ff2c093": {
-        "id": "dff1f52c-5e5d-4d1d-858d-dd988ff2c093",
-        "created_at": "2024-07-27T03:14:32.990229",
-        "updated_at": "2024-07-27T03:18:07.989347",
-        "name": "Jesse",
-        "age": 22,
-        "__class__": "BaseModel"
-    },
-    "BaseModel.555f2610-7755-492e-b095-5130ceb130a5": {
-        "id": "555f2610-7755-492e-b095-5130ceb130a5",
-        "created_at": "2024-07-27T03:20:55.741466",
-        "updated_at": "2024-07-27T03:21:27.049402",
-        "name": "Yeboah",
-        "age": 32,
-        "__class__": "BaseModel"
+    "BaseModel.e1548357-bbd8-4cd6-973f-6d44229b2724": {
+        "id": "e1548357-bbd8-4cd6-973f-6d44229b2724",
+        "created_at": "2024-07-27T22:04:01.476814",
+        "updated_at": "2024-07-28T01:52:33.479192",
+        "__class__": "BaseModel",
+        "name": "Jesse"
     }
 }
