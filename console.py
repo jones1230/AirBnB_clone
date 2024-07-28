@@ -191,26 +191,49 @@ class HBNBCommand(cmd.Cmd):
             elif command[1].startswith("update(") and command[1].endswith(")"):
                 class_name = command[0]
                 if class_name in storage.classes():
-                    params = command[1][7:-1].split(', ')
-                    if len(params) == 3:
-                        instance_id, attr_name, attr_value = params
+                    params = command[1][7:-1]
+                    if params.startswith('{') and params.endswith('}'):
+                        # Handle dictionary update
+                        instance_id, attr_dict = params.split(', ', 1)
                         instance_id = instance_id.strip('"')
-                        attr_name = attr_name.strip('"')
-                        attr_value = attr_value.strip('"')
+                        attr_dict = eval(attr_dict)
                         key = "{}.{}".format(class_name, instance_id)
                         if key in storage.all():
                             instance = storage.all()[key]
-                            try:
-                                attr_type = type(getattr(instance, attr_name))
-                                attr_value = attr_type(attr_value)
-                            except AttributeError:
-                                pass
-                            setattr(instance, attr_name, attr_value)
+                            for attr_name, attr_value in attr_dict.items():
+                                try:
+                                    attr_type = type(getattr(instance,
+                                                             attr_name))
+                                    attr_value = attr_type(attr_value)
+                                except AttributeError:
+                                    pass
+                                setattr(instance, attr_name, attr_value)
                             instance.save()
                         else:
                             print("** no instance found **")
                     else:
-                        print("** invalid command **")
+                        # Handle single attribute update
+                        params = params.split(', ')
+                        if len(params) == 3:
+                            instance_id, attr_name, attr_value = params
+                            instance_id = instance_id.strip('"')
+                            attr_name = attr_name.strip('"')
+                            attr_value = attr_value.strip('"')
+                            key = "{}.{}".format(class_name, instance_id)
+                            if key in storage.all():
+                                instance = storage.all()[key]
+                                try:
+                                    attr_type = type(getattr(instance,
+                                                             attr_name))
+                                    attr_value = attr_type(attr_value)
+                                except AttributeError:
+                                    pass
+                                setattr(instance, attr_name, attr_value)
+                                instance.save()
+                            else:
+                                print("** no instance found **")
+                        else:
+                            print("** invalid command **")
                 else:
                     print("** class doesn't exist **")
             else:
